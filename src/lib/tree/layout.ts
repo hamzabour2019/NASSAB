@@ -17,6 +17,11 @@ const SUBTREE_PAD = 44;
 /** ارتفاع عقدة الربط بين الأبوين والأبناء */
 const UNION_BELOW_PARENT = 62;
 
+/** ترتيب الطبقات: الخطوط خلف البطاقات */
+const Z_EDGE = 0;
+const Z_UNION = 1;
+const Z_MEMBER = 2;
+
 export type TreeGraphInput = {
   members: FamilyMember[];
   parentLinks: ParentChildRelationship[];
@@ -359,6 +364,7 @@ export function buildFlowGraph(input: TreeGraphInput): { nodes: Node[]; edges: E
         source: u.a,
         target: uid,
         type: "smoothstep",
+        zIndex: Z_EDGE,
         style: {
           stroke: "var(--color-muted-foreground)",
           strokeWidth: 2,
@@ -370,6 +376,7 @@ export function buildFlowGraph(input: TreeGraphInput): { nodes: Node[]; edges: E
         source: u.b,
         target: uid,
         type: "smoothstep",
+        zIndex: Z_EDGE,
         style: {
           stroke: "var(--color-muted-foreground)",
           strokeWidth: 2,
@@ -384,6 +391,7 @@ export function buildFlowGraph(input: TreeGraphInput): { nodes: Node[]; edges: E
           source: uid,
           target: cid,
           type: "smoothstep",
+          zIndex: Z_EDGE,
           style: {
             stroke: "var(--color-muted-foreground)",
             strokeWidth: 2,
@@ -399,6 +407,7 @@ export function buildFlowGraph(input: TreeGraphInput): { nodes: Node[]; edges: E
           source: u.id,
           target: cid,
           type: "smoothstep",
+          zIndex: Z_EDGE,
           style: {
             stroke: "var(--color-muted-foreground)",
             strokeWidth: 2,
@@ -467,6 +476,7 @@ export function buildFlowGraph(input: TreeGraphInput): { nodes: Node[]; edges: E
     return {
       id: m.id,
       type: "member",
+      zIndex: Z_MEMBER,
       position: {
         x: c.cx - NODE_W / 2,
         y: c.cy - NODE_H / 2,
@@ -481,6 +491,7 @@ export function buildFlowGraph(input: TreeGraphInput): { nodes: Node[]; edges: E
     nodes.push({
       id: u.id,
       type: "union",
+      zIndex: Z_UNION,
       position: {
         x: u.cx - sz / 2,
         y: u.cy - sz / 2,
@@ -492,24 +503,6 @@ export function buildFlowGraph(input: TreeGraphInput): { nodes: Node[]; edges: E
   }
 
   const edges: Edge[] = [...treeEdges];
-
-  for (const mar of marriages) {
-    if (!memberIds.has(mar.spouse_a_id) || !memberIds.has(mar.spouse_b_id)) continue;
-
-    edges.push({
-      id: `m-${mar.id}`,
-      source: mar.spouse_a_id,
-      target: mar.spouse_b_id,
-      type: "straight",
-      style: {
-        stroke: mar.is_current
-          ? "hsl(280 60% 50%)"
-          : "var(--color-muted-foreground)",
-        strokeWidth: mar.is_current ? 2 : 1,
-        strokeDasharray: mar.is_current ? undefined : "6 4",
-      },
-    });
-  }
 
   return { nodes, edges };
 }

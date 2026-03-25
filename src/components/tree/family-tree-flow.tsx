@@ -48,6 +48,7 @@ function TreeCanvas({
     const { nodes: n, edges: e } = buildFlowGraph(graph);
     const nodes: Node[] = n.map((node) => ({
       ...node,
+      zIndex: node.type === "member" ? 2 : node.type === "union" ? 1 : node.zIndex,
       data: {
         ...node.data,
         highlighted: focusMemberId === node.id,
@@ -127,7 +128,7 @@ function TreeCanvas({
     <div
       ref={viewportRef}
       className={cn(
-        "relative h-[min(720px,72vh)] w-full overflow-hidden rounded-2xl border border-border/70 bg-gradient-to-b from-card/90 to-muted/30 shadow-md ring-1 ring-black/[0.03] dark:ring-white/[0.06]",
+        "family-tree-flow-root relative h-[min(720px,72vh)] w-full overflow-hidden rounded-2xl border border-border/70 bg-gradient-to-b from-card/90 to-muted/30 shadow-md ring-1 ring-black/[0.03] dark:ring-white/[0.06]",
         className
       )}
     >

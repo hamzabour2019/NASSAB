@@ -17,7 +17,7 @@ export function MemberNode({ data, selected }: NodeProps) {
   return (
     <div
       className={cn(
-        "rounded-2xl border-2 bg-card px-3.5 py-2.5 text-center shadow-md transition-all duration-200 min-w-[158px] max-w-[210px]",
+        "relative z-10 rounded-2xl border-2 bg-card px-3.5 py-2.5 text-center shadow-md transition-all duration-200 min-w-[158px] max-w-[210px]",
         m.is_deceased
           ? "border-dashed border-muted-foreground/45 bg-muted/35 opacity-[0.92]"
           : "border-primary/35 bg-card ring-1 ring-primary/10",

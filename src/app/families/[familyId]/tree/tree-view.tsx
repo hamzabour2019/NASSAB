@@ -2,8 +2,10 @@
 
 import { MemberSearch } from "@/components/families/member-search";
 import { FamilyTreeFlow } from "@/components/tree/family-tree-flow";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import {
   Sheet,
   SheetContent,
@@ -13,10 +15,52 @@ import {
 } from "@/components/ui/sheet";
 import { createClient } from "@/lib/supabase/client";
 import { lineageAncestorIds } from "@/lib/tree/lineage";
-import type { FamilyMember, Marriage, ParentChildRelationship } from "@/types";
+import type { FamilyMember, GenderType, Marriage, ParentChildRelationship } from "@/types";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
+
+function genderLabelAr(g: GenderType) {
+  const m: Record<GenderType, string> = {
+    male: "ذكر",
+    female: "أنثى",
+    other: "آخر",
+    unspecified: "غير محدد",
+  };
+  return m[g] ?? g;
+}
+
+function formatArDate(value: string | null | undefined) {
+  if (!value) return null;
+  try {
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return value;
+    return d.toLocaleDateString("ar", { year: "numeric", month: "long", day: "numeric" });
+  } catch {
+    return value;
+  }
+}
+
+function formatArDateTime(value: string | null | undefined) {
+  if (!value) return null;
+  try {
+    const d = new Date(value);
+    if (Number.isNaN(d.getTime())) return value;
+    return d.toLocaleString("ar", { dateStyle: "medium", timeStyle: "short" });
+  } catch {
+    return value;
+  }
+}
+
+function DetailField({ label, value }: { label: string; value: ReactNode }) {
+  if (value === null || value === undefined || value === "") return null;
+  return (
+    <div className="space-y-1">
+      <dt className="text-muted-foreground text-xs font-medium">{label}</dt>
+      <dd className="text-foreground text-sm leading-relaxed break-words">{value}</dd>
+    </div>
+  );
+}
 
 export function TreeView({ familyId }: { familyId: string }) {
   const [focusId, setFocusId] = useState<string | null>(null);
@@ -104,39 +148,58 @@ export function TreeView({ familyId }: { familyId: string }) {
         <SheetContent className="w-full sm:max-w-md">
           {detail && (
             <>
-              <SheetHeader>
-                <SheetTitle>{detail.full_name}</SheetTitle>
-                <SheetDescription>
-                  {detail.is_deceased ? "متوفى" : "على قيد الحياة"}
-                </SheetDescription>
-              </SheetHeader>
-              <ScrollArea className="mt-4 h-[calc(100vh-8rem)]">
-                <dl className="space-y-2 text-sm">
-                  <div>
-                    <dt className="text-muted-foreground">الجنس</dt>
-                    <dd>{detail.gender}</dd>
+              <SheetHeader className="space-y-4 text-start">
+                <div className="flex flex-col items-center gap-3 sm:flex-row sm:items-start">
+                  <Avatar size="lg" className="size-20 ring-2 ring-border/80">
+                    {detail.profile_image_url ? (
+                      <AvatarImage src={detail.profile_image_url} alt="" className="object-cover" />
+                    ) : null}
+                    <AvatarFallback className="text-lg font-semibold">
+                      {detail.full_name
+                        .split(/\s+/)
+                        .slice(0, 2)
+                        .map((p) => p[0])
+                        .join("")}
+                    </AvatarFallback>
+                  </Avatar>
+                  <div className="min-w-0 flex-1 text-center sm:text-start">
+                    <SheetTitle className="text-xl leading-tight">{detail.full_name}</SheetTitle>
+                    <SheetDescription className="mt-1">
+                      {detail.is_deceased ? "متوفى" : "على قيد الحياة"}
+                    </SheetDescription>
                   </div>
-                  {detail.date_of_birth && (
-                    <div>
-                      <dt className="text-muted-foreground">تاريخ الميلاد</dt>
-                      <dd>{detail.date_of_birth}</dd>
-                    </div>
-                  )}
-                  {detail.occupation && (
-                    <div>
-                      <dt className="text-muted-foreground">المهنة</dt>
-                      <dd>{detail.occupation}</dd>
-                    </div>
-                  )}
-                  {detail.biography && (
-                    <div>
-                      <dt className="text-muted-foreground">نبذة</dt>
-                      <dd className="whitespace-pre-wrap">{detail.biography}</dd>
-                    </div>
-                  )}
+                </div>
+              </SheetHeader>
+              <ScrollArea className="mt-4 h-[calc(100vh-8rem)] pe-3">
+                <dl className="space-y-4 text-sm">
+                  <DetailField label="الجنس" value={genderLabelAr(detail.gender)} />
+                  <DetailField label="تاريخ الميلاد" value={formatArDate(detail.date_of_birth)} />
+                  <DetailField
+                    label="تاريخ الوفاة"
+                    value={detail.is_deceased ? formatArDate(detail.date_of_death) ?? "—" : null}
+                  />
+                  <DetailField label="مسقط الرأس" value={detail.place_of_birth} />
+                  <DetailField label="المهنة" value={detail.occupation} />
+                  <DetailField
+                    label="نبذة"
+                    value={
+                      detail.biography ? (
+                        <span className="whitespace-pre-wrap">{detail.biography}</span>
+                      ) : null
+                    }
+                  />
+                  <Separator className="my-2" />
+                  <DetailField
+                    label="حساب مستخدم مرتبط"
+                    value={detail.linked_user_id ? "نعم" : "لا"}
+                  />
+                  <Separator className="my-2" />
+                  <p className="text-muted-foreground text-xs font-medium">بيانات السجل</p>
+                  <DetailField label="تم الإنشاء" value={formatArDateTime(detail.created_at)} />
+                  <DetailField label="آخر تحديث" value={formatArDateTime(detail.updated_at)} />
                 </dl>
                 <Button asChild className="mt-6 w-full">
-                  <Link href={`/families/${familyId}/members/${detail.id}`}>صفحة الفرد</Link>
+                  <Link href={`/families/${familyId}/members/${detail.id}`}>فتح صفحة الفرد الكاملة</Link>
                 </Button>
               </ScrollArea>
             </>
