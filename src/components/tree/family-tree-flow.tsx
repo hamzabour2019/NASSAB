@@ -128,7 +128,7 @@ function TreeCanvas({
     <div
       ref={viewportRef}
       className={cn(
-        "family-tree-flow-root relative h-[min(720px,72vh)] w-full overflow-hidden rounded-2xl border border-border/70 bg-gradient-to-b from-card/90 to-muted/30 shadow-md ring-1 ring-black/[0.03] dark:ring-white/[0.06]",
+        "family-tree-flow-root relative h-[min(720px,min(72vh,85dvh))] min-h-[240px] w-full max-w-[100vw] overflow-hidden rounded-2xl border border-border/70 bg-gradient-to-b from-card/90 to-muted/30 shadow-md ring-1 ring-black/[0.03] dark:ring-white/[0.06]",
         className
       )}
     >

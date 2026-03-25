@@ -1,7 +1,7 @@
 import { AppProviders } from "@/providers/app-providers";
 import { AppShell } from "@/components/layout/app-shell";
 import { readSupabasePublicEnv } from "@/lib/supabase/env-public";
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Cairo } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
@@ -18,6 +18,17 @@ export const metadata: Metadata = {
   description: "منصة عربية لتوثيق وإدارة شجرة العائلة",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 5,
+  viewportFit: "cover",
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f8fafc" },
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -28,7 +39,7 @@ export default function RootLayout({
   return (
     <html lang="ar" dir="rtl" className={cairoArabic.variable} suppressHydrationWarning>
       <body
-        className={`min-h-screen bg-background text-foreground ${cairoArabic.className}`}
+        className={`min-h-dvh overflow-x-hidden bg-background text-foreground antialiased ${cairoArabic.className}`}
         suppressHydrationWarning
       >
         {supabasePublic ? (

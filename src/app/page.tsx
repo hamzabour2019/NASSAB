@@ -101,7 +101,7 @@ export default function HomePage() {
 
   return (
     <div
-      className="min-h-screen font-sans transition-colors duration-500 bg-background text-foreground"
+      className="min-h-dvh w-full max-w-[100vw] overflow-x-hidden bg-background font-sans text-foreground transition-colors duration-500"
       dir="rtl"
     >
       {/* Animated Background */}
