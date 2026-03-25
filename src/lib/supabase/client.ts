@@ -10,8 +10,10 @@ const PLACEHOLDER_KEY =
 let warnedMissingEnv = false;
 
 export function createClient(): SupabaseClient {
-  const url = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim();
-  const key = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim();
+  const urlRaw = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const keyRaw = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  const url = typeof urlRaw === "string" ? urlRaw.trim() : "";
+  const key = typeof keyRaw === "string" ? keyRaw.trim() : "";
   if (!url || !key) {
     if (typeof window !== "undefined" && !warnedMissingEnv) {
       warnedMissingEnv = true;
@@ -25,7 +27,8 @@ export function createClient(): SupabaseClient {
 }
 
 export function isSupabaseBrowserConfigured(): boolean {
-  return Boolean(
-    process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim()
-  );
+  const urlRaw = process.env.NEXT_PUBLIC_SUPABASE_URL;
+  const keyRaw = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
+  if (typeof urlRaw !== "string" || typeof keyRaw !== "string") return false;
+  return Boolean(urlRaw.trim() && keyRaw.trim());
 }
