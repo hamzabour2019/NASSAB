@@ -1,6 +1,7 @@
 "use client";
 
 import { MemberNode } from "@/components/tree/member-node";
+import { UnionNode } from "@/components/tree/union-node";
 import { buildFlowGraph, type TreeGraphInput } from "@/lib/tree/layout";
 import { cn } from "@/lib/utils";
 import type { FamilyMember } from "@/types";
@@ -23,7 +24,7 @@ import { useCallback, useEffect, useMemo, useRef } from "react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 
-const nodeTypes = { member: MemberNode };
+const nodeTypes = { member: MemberNode, union: UnionNode };
 
 type Props = {
   graph: TreeGraphInput;
