@@ -1,6 +1,7 @@
 "use client";
 
-import { createClient, isSupabaseBrowserConfigured } from "@/lib/supabase/client";
+import { createClient } from "@/lib/supabase/client";
+import type { SupabasePublicConfig } from "@/lib/supabase/env-public";
 import type { Session, User } from "@supabase/supabase-js";
 import {
   createContext,
@@ -22,18 +23,20 @@ type AuthContextValue = {
 
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+export function AuthProvider({
+  children,
+  supabasePublic,
+}: {
+  children: ReactNode;
+  supabasePublic: SupabasePublicConfig | null;
+}) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [supabaseMisconfigured, setSupabaseMisconfigured] = useState(false);
-
-  useEffect(() => {
-    setSupabaseMisconfigured(!isSupabaseBrowserConfigured());
-  }, []);
+  const supabaseMisconfigured = supabasePublic === null;
 
   const refresh = useCallback(async () => {
-    if (!isSupabaseBrowserConfigured()) {
+    if (!supabasePublic) {
       setSession(null);
       setUser(null);
       return;
@@ -47,10 +50,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       setSession(null);
       setUser(null);
     }
-  }, []);
+  }, [supabasePublic]);
 
   useEffect(() => {
-    if (!isSupabaseBrowserConfigured()) {
+    if (!supabasePublic) {
       setLoading(false);
       return;
     }
@@ -90,7 +93,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, []);
+  }, [supabasePublic]);
 
   const value = useMemo(
     () => ({
