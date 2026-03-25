@@ -12,9 +12,12 @@ export type TreeGraphInput = {
   marriages: Marriage[];
 };
 
-export function buildFlowGraph(input: TreeGraphInput): { nodes: Node[]; edges: Edge[] } {
-  const { members, parentLinks, marriages } = input;
-
+/** BFS from parentless nodes, then settle married couples on the same row and push children below parents. */
+function computeGenerations(
+  members: FamilyMember[],
+  parentLinks: ParentChildRelationship[],
+  marriages: Marriage[]
+): Map<string, number> {
   const childrenByParent = new Map<string, string[]>();
   for (const l of parentLinks) {
     const list = childrenByParent.get(l.parent_member_id) ?? [];
@@ -41,6 +44,48 @@ export function buildFlowGraph(input: TreeGraphInput): { nodes: Node[]; edges: E
   for (const m of members) {
     if (!level.has(m.id)) level.set(m.id, 0);
   }
+
+  const memberIds = new Set(members.map((m) => m.id));
+
+  for (let i = 0; i < 32; i++) {
+    let changed = false;
+
+    for (const mar of marriages) {
+      const { spouse_a_id: a, spouse_b_id: b } = mar;
+      if (!memberIds.has(a) || !memberIds.has(b)) continue;
+      const la = level.get(a) ?? 0;
+      const lb = level.get(b) ?? 0;
+      const L = Math.max(la, lb);
+      if (la !== L) {
+        level.set(a, L);
+        changed = true;
+      }
+      if (lb !== L) {
+        level.set(b, L);
+        changed = true;
+      }
+    }
+
+    for (const l of parentLinks) {
+      const pl = level.get(l.parent_member_id) ?? 0;
+      const need = pl + 1;
+      const cl = level.get(l.child_member_id) ?? 0;
+      if (cl < need) {
+        level.set(l.child_member_id, need);
+        changed = true;
+      }
+    }
+
+    if (!changed) break;
+  }
+
+  return level;
+}
+
+export function buildFlowGraph(input: TreeGraphInput): { nodes: Node[]; edges: Edge[] } {
+  const { members, parentLinks, marriages } = input;
+
+  const level = computeGenerations(members, parentLinks, marriages);
 
   const byLevel = new Map<number, string[]>();
   let maxLv = 0;
