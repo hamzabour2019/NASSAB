@@ -7,8 +7,9 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
+  /* مرتبط بخط Noto من next/font على <html> — تجنب المرجعية الدائرية var(--font-sans) */
+  --font-sans: var(--font-arabic), "Noto Sans Arabic", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, monospace;
   --font-heading: var(--font-sans);
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
@@ -49,82 +50,202 @@
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* تلوين مطابق للواجهة القديمة (Vite/Tailwind):
+     - primary ~ #327EE0
+     - خلفية فاتحة سلايت (#F8FAFC)
+  */
+  --background: #f8fafc;
+  --foreground: #0f172a;
+  --card: #ffffff;
+  --card-foreground: #0f172a;
+  --popover: #ffffff;
+  --popover-foreground: #0f172a;
+
+  --primary: #327ee0;
+  --primary-foreground: #ffffff;
+
+  --secondary: #327ee0;
+  --secondary-foreground: #ffffff;
+
+  --muted: #eef2ff;
+  --muted-foreground: #475569;
+
+  --accent: #4a8bed;
+  --accent-foreground: #ffffff;
+
+  --destructive: #ef4444;
+  --border: #e2e8f0;
+  --input: #e2e8f0;
+  --ring: #327ee0;
+
+  --chart-1: #327ee0;
+  --chart-2: #4a8bed;
+  --chart-3: #2869c4;
+  --chart-4: #2155a8;
+  --chart-5: #15366e;
+  --radius: 0.75rem;
+  --sidebar: #f8fafc;
+  --sidebar-foreground: #0f172a;
+  --sidebar-primary: #327ee0;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #4a8bed;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #e2e8f0;
+  --sidebar-ring: #327ee0;
+
+  --hero-glow: #327ee0;
+  --hero-mesh: #6fa3f2;
 }
 
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --background: #000000;
+  --foreground: #f8fafc;
+  --card: #0a0a0a;
+  --card-foreground: #f8fafc;
+  --popover: #0a0a0a;
+  --popover-foreground: #f8fafc;
+
+  --primary: #327ee0;
+  --primary-foreground: #ffffff;
+
+  --secondary: #327ee0;
+  --secondary-foreground: #ffffff;
+
+  --muted: #0f172a;
+  --muted-foreground: #94a3b8;
+
+  --accent: #4a8bed;
+  --accent-foreground: #ffffff;
+
+  --destructive: #ef4444;
+  --border: #1f2937;
+  --input: #1f2937;
+  --ring: #327ee0;
+
+  --chart-1: #327ee0;
+  --chart-2: #4a8bed;
+  --chart-3: #2869c4;
+  --chart-4: #2155a8;
+  --chart-5: #15366e;
+
+  --sidebar: #000000;
+  --sidebar-foreground: #f8fafc;
+  --sidebar-primary: #327ee0;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #4a8bed;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #1f2937;
+  --sidebar-ring: #327ee0;
+
+  --hero-glow: #327ee0;
+  --hero-mesh: #15366e;
 }
 
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
   html {
-    @apply font-sans;
+    @apply font-sans scroll-smooth;
   }
+  body {
+    @apply bg-background text-foreground antialiased;
+  }
+}
+
+/* خلفية هادئة — لا تؤثر على تباين النص */
+.page-bg {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 100% 60% at 50% -15%, var(--hero-glow), transparent 55%),
+    radial-gradient(ellipse 80% 50% at 100% 0%, var(--hero-mesh), transparent 45%),
+    radial-gradient(ellipse 70% 40% at 0% 20%, var(--hero-mesh), transparent 50%);
+  opacity: 0.55;
+}
+
+.dark .page-bg {
+  opacity: 0.35;
+}
+
+.glass {
+  @apply bg-white/70 dark:bg-black/80 backdrop-blur-xl border border-white/50 dark:border-white/10 shadow-lg dark:shadow-xl transition-colors duration-500;
+}
+
+.glass-panel {
+  @apply bg-white/60 dark:bg-black/70 backdrop-blur-md border border-white/40 dark:border-white/10 shadow-xl rounded-3xl transition-colors duration-500;
+}
+
+.custom-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(203, 213, 225, 0.9) transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(203, 213, 225, 0.95);
+  border-radius: 9999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(148, 163, 184, 0.95);
+}
+
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+  }
+  33% {
+    transform: translate(25px, -10px) scale(1.05);
+  }
+  66% {
+    transform: translate(-10px, 20px) scale(0.95);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 12s ease-in-out infinite;
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes slideUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-out both;
+}
+
+.animate-slide-up {
+  animation: slideUp 0.5s ease-out both;
 }

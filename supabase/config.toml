@@ -1,0 +1,6 @@
+# إعدادات اختيارية لـ Supabase CLI المحلي
+# https://supabase.com/docs/guides/cli/config
+
+[db.seed]
+enabled = true
+sql_paths = ["./seed.sql"]

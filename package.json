@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
+    "dev:3001": "next dev --turbopack -p 3001",
     "build": "next build --turbopack",
     "start": "next start",
     "lint": "eslint"
@@ -30,6 +31,7 @@
     "@xyflow/react": "^12.10.1",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "cmdk": "^1.1.1",
     "date-fns": "^4.1.0",
     "html2canvas": "^1.4.1",
     "jspdf": "^4.2.1",
